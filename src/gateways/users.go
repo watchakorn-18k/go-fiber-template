@@ -16,7 +16,7 @@ func (h HTTPGateway) GetAllUserData(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(entities.ResponseModel{Message: "success", Data: data})
 }
 
-func (h HTTPGateway) CreatNewUserAccount(ctx *fiber.Ctx) error {
+func (h HTTPGateway) CreateNewUserAccount(ctx *fiber.Ctx) error {
 
 	var bodyData entities.NewUserBody
 	if err := ctx.BodyParser(&bodyData); err != nil {
