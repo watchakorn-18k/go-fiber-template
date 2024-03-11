@@ -2,10 +2,10 @@ package middlewares
 
 import (
 	"fmt"
+	"go-fiber-template/domain/entities"
 	"log"
 	"net/http"
 	"os"
-	"template/domain/entities"
 	"time"
 
 	jwtware "github.com/gofiber/contrib/jwt"

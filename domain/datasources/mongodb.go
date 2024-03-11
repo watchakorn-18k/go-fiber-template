@@ -15,11 +15,6 @@ type MongoDB struct {
 	MongoDB *mongo.Client
 }
 
-type IMongoDB interface {
-	Disconnect()
-	Ping()
-}
-
 func NewMongoDB(maxPoolSize uint64) *MongoDB {
 
 	option := options.Client().ApplyURI(os.Getenv("MONGODB_URI")).SetMonitor(apmmongo.CommandMonitor()).SetMaxPoolSize(maxPoolSize)
@@ -33,12 +28,4 @@ func NewMongoDB(maxPoolSize uint64) *MongoDB {
 		Context: context.Background(),
 		MongoDB: client,
 	}
-}
-
-func (ds MongoDB) Disconnect() {
-	ds.MongoDB.Disconnect(ds.Context)
-}
-
-func (ds MongoDB) Ping() {
-
 }

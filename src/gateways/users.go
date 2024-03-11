@@ -1,8 +1,8 @@
 package gateways
 
 import (
+	"go-fiber-template/domain/entities"
 	"log"
-	"template/domain/entities"
 
 	"github.com/gofiber/fiber/v2"
 )

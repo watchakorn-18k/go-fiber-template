@@ -1,14 +1,14 @@
 package main
 
 import (
+	"go-fiber-template/configuration"
+	ds "go-fiber-template/domain/datasources"
+	repo "go-fiber-template/domain/repositories"
+	gw "go-fiber-template/src/gateways"
+	"go-fiber-template/src/middlewares"
+	sv "go-fiber-template/src/services"
 	"log"
 	"os"
-	"template/configuration"
-	ds "template/domain/datasources"
-	repo "template/domain/repositories"
-	gw "template/src/gateways"
-	"template/src/middlewares"
-	sv "template/src/services"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

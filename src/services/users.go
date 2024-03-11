@@ -1,8 +1,8 @@
 package services
 
 import (
-	"template/domain/entities"
-	"template/domain/repositories"
+	"go-fiber-template/domain/entities"
+	"go-fiber-template/domain/repositories"
 )
 
 type usersService struct {

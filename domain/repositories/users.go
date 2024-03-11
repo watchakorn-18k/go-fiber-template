@@ -2,9 +2,9 @@ package repositories
 
 import (
 	"context"
+	. "go-fiber-template/domain/datasources"
+	"go-fiber-template/domain/entities"
 	"os"
-	. "template/domain/datasources"
-	"template/domain/entities"
 
 	fiberlog "github.com/gofiber/fiber/v2/log"
 

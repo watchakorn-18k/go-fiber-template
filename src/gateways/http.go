@@ -1,7 +1,7 @@
 package gateways
 
 import (
-	service "template/src/services"
+	service "go-fiber-template/src/services"
 
 	"github.com/gofiber/fiber/v2"
 )
