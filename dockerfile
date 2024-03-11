@@ -8,10 +8,10 @@ WORKDIR /app
 COPY . /app
 
 # Build the application
-RUN go mod tidy && go build -o main .
+# RUN go mod tidy && go build -o main .
 
 # Expose port 8080
 EXPOSE 8080
 
 # Define the entry point for the container
-CMD ["./main"]
+CMD ["./go-fiber-template.exe"]
