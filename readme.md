@@ -27,3 +27,13 @@ go install github.com/cosmtrek/air@latest
 ```sh
 air
 ```
+
+# Podman
+
+```
+podman build -t fiber-test .
+```
+
+```
+podman run --rm -it -p 3000:3000 fiber-test
+```
