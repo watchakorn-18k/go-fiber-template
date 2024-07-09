@@ -1,19 +1,17 @@
-# Use the official Go image as the base image
-FROM golang:1.22.1-alpine
+FROM golang:1.22-alpine3.20 as builder
 
-# Set the working directory in the container
+RUN apk update && apk add --no-cache ca-certificates
+
 WORKDIR /app
+COPY . .
 
-# Copy the application files into the working directory
-COPY . /app
+COPY ./docs/swagger.yaml /app/docs/swagger.yaml
 
-RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /main .
 
-# Build the application
-RUN go build -o main .
-
-# Expose port 8080
-EXPOSE 8080
-
-# Define the entry point for the container
-CMD ["./main"]
+FROM scratch
+WORKDIR /
+COPY --from=builder /main /main
+COPY --from=builder /app/docs /docs
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ENTRYPOINT ["/main"]

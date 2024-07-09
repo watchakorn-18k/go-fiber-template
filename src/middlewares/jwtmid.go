@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"fmt"
-	"go-fiber-template/domain/entities"
+	"go-fiber-template/src/domain/entities"
 	"log"
 	"net/http"
 	"os"

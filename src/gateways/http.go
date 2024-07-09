@@ -8,12 +8,15 @@ import (
 
 type HTTPGateway struct {
 	UserService service.IUsersService
+	IPService   service.IIpService
 }
 
-func NewHTTPGateway(app *fiber.App, users service.IUsersService) {
+func NewHTTPGateway(app *fiber.App, users service.IUsersService, ip service.IIpService) {
 	gateway := &HTTPGateway{
 		UserService: users,
+		IPService:   ip,
 	}
 
-	GatewayUsers(*gateway, app)
+	RouteUsers(*gateway, app)
+	RouteIP(*gateway, app)
 }
