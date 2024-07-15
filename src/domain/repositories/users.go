@@ -2,18 +2,18 @@ package repositories
 
 import (
 	"context"
+	"fmt"
+	"os"
+	"time"
+
 	ds "go-fiber-template/src/domain/datasources"
 	"go-fiber-template/src/domain/entities"
-	"os"
-
-	fiberlog "github.com/gofiber/fiber/v2/log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type usersRepository struct {
-	Context    context.Context
 	Collection *mongo.Collection
 }
 
@@ -26,61 +26,81 @@ type IUsersRepository interface {
 }
 
 func NewUsersRepository(db *ds.MongoDB) IUsersRepository {
+	collection := db.MongoDB.Database(os.Getenv("DATABASE_NAME")).Collection("users")
 	return &usersRepository{
-		Context:    db.Context,
-		Collection: db.MongoDB.Database(os.Getenv("DATABASE_NAME")).Collection("users"),
+		Collection: collection,
 	}
 }
 
 func (repo *usersRepository) InsertNewUser(data *entities.UserDataFormat) error {
-	if _, err := repo.Collection.InsertOne(repo.Context, data); err != nil {
-		fiberlog.Errorf("Users -> InsertNewUser: %s \n", err)
-		return err
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if _, err := repo.Collection.InsertOne(ctx, data); err != nil {
+		return fmt.Errorf("error inserting user: %v", err)
 	}
 	return nil
 }
 
 func (repo *usersRepository) FindAll() (*[]entities.UserDataFormat, error) {
-	cursor, err := repo.Collection.Find(repo.Context, bson.M{})
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	cursor, err := repo.Collection.Find(ctx, bson.M{})
 	if err != nil {
-		fiberlog.Errorf("Users -> FindAll: %s \n", err)
-		return nil, err
+		return nil, fmt.Errorf("error finding users: %v", err)
 	}
-	defer cursor.Close(repo.Context)
+	defer cursor.Close(ctx)
 
 	var userData []entities.UserDataFormat
-	for cursor.Next(repo.Context) {
+	for cursor.Next(ctx) {
 		var user entities.UserDataFormat
 		if err := cursor.Decode(&user); err != nil {
-			continue
+			return nil, fmt.Errorf("error decoding user: %v", err)
 		}
 		userData = append(userData, user)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, fmt.Errorf("cursor error: %v", err)
 	}
 
 	return &userData, nil
 }
 
 func (repo *usersRepository) UpdateUser(userID string, data *entities.NewUserBody) error {
-	if _, err := repo.Collection.UpdateOne(repo.Context, bson.M{"user_id": userID}, bson.M{"$set": data}); err != nil {
-		fiberlog.Errorf("Users -> UpdateUser: %s \n", err)
-		return err
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"user_id": userID}
+	update := bson.M{"$set": data}
+
+	if _, err := repo.Collection.UpdateOne(ctx, filter, update); err != nil {
+		return fmt.Errorf("error updating user: %v", err)
 	}
 	return nil
 }
 
 func (repo *usersRepository) DeleteUser(userID string) error {
-	if _, err := repo.Collection.DeleteOne(repo.Context, bson.M{"user_id": userID}); err != nil {
-		fiberlog.Errorf("Users -> DeleteUser: %s \n", err)
-		return err
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"user_id": userID}
+	if _, err := repo.Collection.DeleteOne(ctx, filter); err != nil {
+		return fmt.Errorf("error deleting user: %v", err)
 	}
 	return nil
 }
 
 func (repo *usersRepository) GetUser(userID string) (*entities.UserDataFormat, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	var user entities.UserDataFormat
-	if err := repo.Collection.FindOne(repo.Context, bson.M{"user_id": userID}).Decode(&user); err != nil {
-		fiberlog.Errorf("Users -> GetUser: %s \n", err)
-		return nil, err
+	filter := bson.M{"user_id": userID}
+
+	if err := repo.Collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		return nil, fmt.Errorf("error getting user: %v", err)
 	}
 	return &user, nil
 }

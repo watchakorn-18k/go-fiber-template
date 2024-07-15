@@ -51,5 +51,5 @@ func main() {
 		PORT = "8080"
 	}
 
-	app.Listen(":" + PORT)
+	app.Listen("localhost:" + PORT)
 }
