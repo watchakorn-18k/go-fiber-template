@@ -9,6 +9,7 @@ import (
 	sv "go-fiber-template/src/services"
 	"log"
 	"os"
+	"fmt"
 
 	swagger "github.com/gofiber/contrib/swagger"
 
@@ -23,7 +24,7 @@ func main() {
 	// // // remove this before deploy ###################
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		fmt.Println("Error loading .env file")
 	}
 	// /// ############################################
 
