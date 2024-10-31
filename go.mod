@@ -1,6 +1,6 @@
 module go-fiber-template
 
-go 1.22.1
+go 1.22.3
 
 require (
 	github.com/goccy/go-json v0.10.2
