@@ -5,16 +5,19 @@ import (
 )
 
 type IPService struct {
+	IpHttpClient httpclients.IpInterface
 }
 
 type IIpService interface {
 	GetIp() (string, error)
 }
 
-func NewIpService() IIpService {
-	return &IPService{}
+func NewIpService(ipHC httpclients.IpInterface) IIpService {
+	return &IPService{
+		IpHttpClient: ipHC,
+	}
 }
 
 func (sv *IPService) GetIp() (string, error) {
-	return httpclients.GetIp()
+	return sv.IpHttpClient.GetIp()
 }

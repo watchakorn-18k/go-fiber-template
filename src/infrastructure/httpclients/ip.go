@@ -7,14 +7,30 @@ import (
 	"github.com/goccy/go-json"
 )
 
+type ipHttpClient struct {
+	url  string
+	http *http.Client
+}
+
+type IpInterface interface {
+	GetIp() (string, error)
+}
+
 type IP struct {
 	IP string `json:"ip"`
 }
 
-func GetIp() (string, error) {
+func NewIPHttpClient() IpInterface {
 	url := "https://api.ipify.org?format=json"
+	return &ipHttpClient{
+		url:  url,
+		http: &http.Client{},
+	}
+}
 
-	resp, err := http.Get(url)
+func (hc *ipHttpClient) GetIp() (string, error) {
+
+	resp, err := hc.http.Get(hc.url)
 	if err != nil {
 		return "", err
 	}

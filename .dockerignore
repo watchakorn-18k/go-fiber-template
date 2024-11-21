@@ -1,3 +1,7 @@
 .vscode
 /tmp/*
-vendor
+.env
+.gitignore
+readme.md
+Dockerfile
+.git

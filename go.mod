@@ -3,6 +3,7 @@ module go-fiber-template
 go 1.22.3
 
 require (
+	github.com/aws/aws-sdk-go v1.34.28
 	github.com/goccy/go-json v0.10.2
 	github.com/gofiber/contrib/jwt v1.0.8
 	github.com/gofiber/fiber/v2 v2.52.5
@@ -23,6 +24,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/jcchavezs/porto v0.1.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

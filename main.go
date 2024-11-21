@@ -6,6 +6,7 @@ import (
 	ds "go-fiber-template/src/domain/datasources"
 	repo "go-fiber-template/src/domain/repositories"
 	"go-fiber-template/src/gateways"
+	"go-fiber-template/src/infrastructure/httpclients"
 	"go-fiber-template/src/middlewares"
 	sv "go-fiber-template/src/services"
 	"os"
@@ -16,22 +17,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func main() {
-
-	// // // remove this before deploy ###################
+func init() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
 	}
-	// /// ############################################
+}
 
+func main() {
 	app := fiber.New(configuration.NewFiberConfiguration())
 	middlewares.Logger(app)
-	// app.Use(swagger.New(swagger.Config{
-	// 	BasePath: "/api/",
-	// 	FilePath: "./src/docs/swagger.yaml",
-	// 	Path:     "docs",
-	// }))
 	app.Use(middlewares.ScalarMiddleware(middlewares.Config{
 		PathURL:   "/api/docs",
 		SpecURL:   "./src/docs/swagger.yaml",
@@ -41,18 +36,17 @@ func main() {
 	app.Use(cors.New())
 
 	mongodb := ds.NewMongoDB(10)
-
+	ipHC := httpclients.NewIPHttpClient()
 	userMongo := repo.NewUsersRepository(mongodb)
+	userSV := sv.NewUsersService(userMongo)
+	ipSV := sv.NewIpService(ipHC)
 
-	sv0 := sv.NewUsersService(userMongo)
-	sv1 := sv.NewIpService()
-
-	gateways.NewHTTPGateway(app, sv0, sv1)
+	gateways.NewHTTPGateway(app, userSV, ipSV)
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
 		PORT = "8080"
 	}
 
-	app.Listen("localhost:" + PORT)
+	app.Listen(":" + PORT)
 }
