@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/watchakorn-18k/scalar-go"
 )
@@ -40,6 +42,10 @@ func NewConfig(pathURL, specURL, pageTitle string, theme, layout string, darkMod
 
 // ScalarMiddleware สร้าง middleware จาก config
 func ScalarMiddleware(config Config) fiber.Handler {
+	if config.PageTitle == "" {
+		name, _ := GetModuleName()
+		config.PageTitle = fmt.Sprintf("%v API documentation", name)
+	}
 	return func(c *fiber.Ctx) error {
 		if c.Path() == config.PathURL {
 			htmlContent, err := scalar.ApiReferenceHTML(&scalar.Options{

@@ -26,14 +26,15 @@ func init() {
 
 func main() {
 	app := fiber.New(configuration.NewFiberConfiguration())
-	middlewares.Logger(app)
+
 	app.Use(middlewares.ScalarMiddleware(middlewares.Config{
-		PathURL:   "/api/docs",
-		SpecURL:   "./src/docs/swagger.yaml",
-		PageTitle: "Fiber API documentation",
+		PathURL: "/api/docs",
+		SpecURL: "./src/docs/swagger.yaml",
 	}))
+	app.Use(middlewares.MonitorMiddleware("/api/monitor"))
 	app.Use(recover.New())
 	app.Use(cors.New())
+	app.Use(middlewares.Logger())
 
 	mongodb := ds.NewMongoDB(10)
 	ipHC := httpclients.NewIPHttpClient()
