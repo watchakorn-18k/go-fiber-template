@@ -35,5 +35,15 @@ podman build -t fiber-test .
 ```
 
 ```
-podman run --rm -it -p 3000:3000 fiber-test
+podman run --rm -it -p 1818:1818 --env-file .env fiber-test
+```
+
+# Docker
+
+```
+docker build -t fiber-test .
+```
+
+```
+docker run --rm -it -p 1818:1818 --env-file .env fiber-test
 ```
