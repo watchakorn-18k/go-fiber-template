@@ -1,7 +1,7 @@
 package services
 
 import (
-	ipAddr "go-fiber-template/src/infrastructure/ip_addr"
+	httpclients "go-fiber-template/src/infrastructure/httpclients"
 )
 
 type IPService struct {
@@ -16,5 +16,5 @@ func NewIpService() IIpService {
 }
 
 func (sv *IPService) GetIp() (string, error) {
-	return ipAddr.GetIp()
+	return httpclients.GetIp()
 }
